@@ -2,8 +2,13 @@
     --primary-color: #1b4332;
     --secondary-color: #2d6a4f;
     --accent-color: #d4af37;
+    --accent-hover: #b89628;
     --light-bg: #f8f9fa;
     --dark-text: #2b2b2b;
+    --whatsapp-color: #25D366;
+    --whatsapp-hover: #1eb854;
+    --email-color: #0078d4;
+    --email-hover: #005a9e;
 }
 
 * {
@@ -211,7 +216,7 @@ nav a:hover {
 }
 
 .btn-pdf:hover {
-    background-color: #b89628;
+    background-color: var(--accent-hover);
     color: white;
 }
 
@@ -250,7 +255,7 @@ nav a:hover {
     border-radius: 6px;
     font-size: 1rem;
     outline: none;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .form-group input:focus, 
@@ -260,6 +265,7 @@ nav a:hover {
     box-shadow: 0 0 5px rgba(45, 106, 79, 0.3);
 }
 
+/* BUTTON GROUP FOR FORM */
 .btn-group {
     display: flex;
     gap: 15px;
@@ -269,7 +275,7 @@ nav a:hover {
 
 .btn-submit {
     flex: 1;
-    min-width: 200px;
+    min-width: 180px;
     background-color: var(--primary-color);
     color: white;
     padding: 14px;
@@ -278,6 +284,7 @@ nav a:hover {
     font-size: 1.05rem;
     font-weight: 600;
     cursor: pointer;
+    text-align: center;
     transition: background-color 0.3s ease;
 }
 
@@ -287,8 +294,8 @@ nav a:hover {
 
 .btn-whatsapp {
     flex: 1;
-    min-width: 200px;
-    background-color: #25D366;
+    min-width: 180px;
+    background-color: var(--whatsapp-color);
     color: white;
     padding: 14px;
     border: none;
@@ -303,7 +310,28 @@ nav a:hover {
 }
 
 .btn-whatsapp:hover {
-    background-color: #1eb854;
+    background-color: var(--whatsapp-hover);
+}
+
+.btn-email {
+    flex: 1;
+    min-width: 180px;
+    background-color: var(--email-color);
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.btn-email:hover {
+    background-color: var(--email-hover);
 }
 
 /* PDF TEMPLATE STYLES */
@@ -422,24 +450,4 @@ footer a {
     .btn-group {
         flex-direction: column;
     }
-}
-.btn-email {
-    flex: 1;
-    min-width: 180px;
-    background-color: #0078d4; /* Rangi ya Bluu ya Email */
-    color: white;
-    padding: 14px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1.05rem;
-    font-weight: 600;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    transition: background-color 0.3s ease;
-}
-
-.btn-email:hover {
-    background-color: #005a9e;
 }
