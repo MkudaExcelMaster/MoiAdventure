@@ -43,17 +43,20 @@ async function saveBookingToSupabase(bookingData) {
 
 
 // ==========================================
-// 2. AUTOMATIC IMAGE SLIDER (Picha 200)
+// 2. AUTOMATIC IMAGE SLIDER (Picha kutoka Supabase)
 // ==========================================
 const sliderContainer = document.querySelector('.slider-container');
 const totalImages = 200; // Idadi ya picha
+const SUPABASE_STORAGE_URL = 'https://kyuokonjmaunmprrvzin.supabase.co/storage/v1/object/public/moi-adventure/images';
 
 if (sliderContainer) {
     sliderContainer.innerHTML = '';
     for (let i = 1; i <= totalImages; i++) {
         const slideDiv = document.createElement('div');
         slideDiv.className = i === 1 ? 'slide active' : 'slide';
-        slideDiv.style.backgroundImage = `url('images/hero${i}.jpeg')`;
+        
+        // Inasoma picha moja kwa moja kutoka Supabase Storage
+        slideDiv.style.backgroundImage = `url('${SUPABASE_STORAGE_URL}/hero${i}.jpeg')`;
         
         slideDiv.innerHTML = `
             <div class="slide-overlay">
@@ -168,7 +171,7 @@ async function sendToWhatsApp(event) {
                     `📅 *Tarehe:* ${date}\n` +
                     `📝 *Maelezo:* ${notes || 'Hakuna'}`;
 
-    const whatsappUrl = `https://wa.me/2557693345456?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/255769345456?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 }
 
