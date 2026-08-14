@@ -1,270 +1,211 @@
-<!DOCTYPE html>
-<html lang="sw">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOI ADVENTURE - Mount Kilimanjaro Climbing</title>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- External CSS -->
-    <link rel="stylesheet" href="style.css">
+// ==========================================
+// 1. SUPABASE INITIALIZATION
+// ==========================================
+const SUPABASE_URL = 'https://kyuokonjmaunmprrvzin.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_e3GzVKCe5mAr6SBaomqKjw_gD9Ql3Eb';
 
-    <!-- html2pdf Library for generating PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-</head>
-<body>
+// Kutengeneza Supabase client
+const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-    <!-- HEADER / NAVIGATION (Yenye Logo Mbili: Kulia na Kushoto) -->
-    <header>
-        <!-- Logo ya Kushoto -->
-        <div class="header-logo">
-            <img src="images/logo-left.png" alt="MOI Adventure Logo 1" class="site-logo" onerror="this.src='https://via.placeholder.com/60?text=LOGO+1'">
-        </div>
+// Function ya kuhifadhi data kwenye Supabase Database
+async function saveBookingToSupabase(bookingData) {
+    if (!supabase) {
+        console.error("Supabase library haijapakia vizuri.");
+        return false;
+    }
 
-        <!-- Katikati: Jina la Biashara na Menyu -->
-        <div class="header-center">
-            <h1>MOI ADVENTURE</h1>
-            <nav>
-                <a href="#routes">Njia za Mlima</a>
-                <a href="#booking">Fanya Booking</a>
-                <a href="https://wa.me/255769345456" target="_blank">WhatsApp</a>
-            </nav>
-        </div>
+    try {
+        const { data, error } = await supabase
+            .from('bookings')
+            .insert([
+                {
+                    full_name: bookingData.name,
+                    phone: bookingData.phone,
+                    email: bookingData.email,
+                    country: bookingData.country,
+                    route: bookingData.route,
+                    start_date: bookingData.date,
+                    notes: bookingData.notes
+                }
+            ]);
 
-        <!-- Logo ya Kulia -->
-        <div class="header-logo">
-            <img src="images/logo-right.png" alt="MOI Adventure Logo 2" class="site-logo" onerror="this.src='https://via.placeholder.com/60?text=LOGO+2'">
-        </div>
-    </header>
+        if (error) {
+            console.error("Supabase Error:", error);
+            return false;
+        }
+        console.log("Booking imehifadhiwa Supabase kikamilifu:", data);
+        return true;
+    } catch (err) {
+        console.error("System Error:", err);
+        return false;
+    }
+}
 
-    <!-- HERO CAROUSEL / SLIDER (Inabadilika Kila Baada ya Sekunde 5) -->
-    <div class="slider-container">
+
+// ==========================================
+// 2. AUTOMATIC IMAGE SLIDER (Picha 200)
+// ==========================================
+const sliderContainer = document.querySelector('.slider-container');
+const totalImages = 200; // Idadi ya picha
+
+if (sliderContainer) {
+    sliderContainer.innerHTML = '';
+    for (let i = 1; i <= totalImages; i++) {
+        const slideDiv = document.createElement('div');
+        slideDiv.className = i === 1 ? 'slide active' : 'slide';
+        slideDiv.style.backgroundImage = `url('images/hero${i}.jpeg')`;
         
-        <!-- Picha ya 1 -->
-        <div class="slide active" style="background-image: url('images/hero1.jpeg');">
+        slideDiv.innerHTML = `
             <div class="slide-overlay">
                 <h2>MOI ADVENTURE</h2>
                 <p>Your Trusted Guide to the Roof of Africa - Mount Kilimanjaro</p>
             </div>
-        </div>
+        `;
+        sliderContainer.appendChild(slideDiv);
+    }
+}
 
-        <!-- Picha ya 2 -->
-        <div class="slide" style="background-image: url('images/hero2.jpeg');">
-            <div class="slide-overlay">
-                <h2>Uhuru Peak Challenge</h2>
-                <p>Panda Mlima Kilimanjaro kwa usalama na uzoefu wa hali ya juu.</p>
-            </div>
-        </div>
+let currentSlide = 0;
+function nextSlide() {
+    const slides = document.querySelectorAll('.slide');
+    if (slides.length > 0) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+    }
+}
+setInterval(nextSlide, 5000);
 
-        <!-- Picha ya 3 -->
-        <div class="slide" style="background-image: url('images/hero3.jpeg');">
-            <div class="slide-overlay">
-                <h2>Uzoefu Usiosahaulika</h2>
-                <p>Chagua njia bora na ujiandae kwa safari ya maisha yako.</p>
-            </div>
-        </div>
 
-    </div>
+// ==========================================
+// 3. GENERATE PDF BOOKING CONFIRMATION
+// ==========================================
+function generatePDF() {
+    if (typeof html2pdf === 'undefined') {
+        alert("Library ya PDF haijapakia. Hakikisha umeiweka kwenye index.html!");
+        return;
+    }
 
-    <!-- MAIN CONTAINER -->
-    <div class="container">
+    const name = document.getElementById('fullName')?.value.trim();
+    const phone = document.getElementById('phone')?.value.trim();
+    const email = document.getElementById('email')?.value.trim();
+    const country = document.getElementById('country')?.value.trim();
+    const route = document.getElementById('selectedRoute')?.value;
+    const date = document.getElementById('startDate')?.value;
+    const notes = document.getElementById('notes')?.value.trim();
 
-        <!-- ROUTES SECTION -->
-        <section id="routes">
-            <h2 class="section-title">Njia Tano (5) Za Kupanda Kilimanjaro</h2>
-            <div class="routes-grid">
+    if (!name || !phone || !route || !date) {
+        alert("Tafadhali jaza taarifa zote muhimu (Jina, Simu, Route, na Tarehe) kabla ya kupakua PDF.");
+        return;
+    }
 
-                <!-- 1. Marangu Route -->
-                <div class="route-card">
-                    <div class="route-card-header">
-                        <h3>1. Marangu Route</h3>
-                    </div>
-                    <div class="route-card-body">
-                        <p>Njia hii inafahamika pia kama "Coca-Cola Route". Ni njia pekee yenye nyumba za kulala (huts) badala ya hema.</p>
-                        <a href="Marangu 6 days.pdf" target="_blank" class="btn-pdf">📄 Pakua PDF (Marangu Route)</a>
-                    </div>
-                </div>
+    if (document.getElementById('pdfName')) document.getElementById('pdfName').innerText = name;
+    if (document.getElementById('pdfPhone')) document.getElementById('pdfPhone').innerText = phone;
+    if (document.getElementById('pdfEmail')) document.getElementById('pdfEmail').innerText = email || "Hazijawekwa";
+    if (document.getElementById('pdfCountry')) document.getElementById('pdfCountry').innerText = country || "Hazijawekwa";
+    if (document.getElementById('pdfRoute')) document.getElementById('pdfRoute').innerText = route;
+    if (document.getElementById('pdfDate')) document.getElementById('pdfDate').innerText = date;
+    if (document.getElementById('pdfNotes')) document.getElementById('pdfNotes').innerText = notes || "Hakuna";
 
-                <!-- 2. Lemosho Route -->
-                <div class="route-card">
-                    <div class="route-card-header">
-                        <h3>2. Lemosho Route</h3>
-                    </div>
-                    <div class="route-card-body">
-                        <p>Inajulikana kwa kuwa na uwezekano mkubwa wa kufika kileleni na muonekano mzuri sana wa asili.</p>
-                        <a href="Lemosho 8 days.pdf" target="_blank" class="btn-pdf">📄 Pakua PDF (Lemosho Route)</a>
-                    </div>
-                </div>
+    const pdfTemplate = document.getElementById('pdfTemplate');
+    if (!pdfTemplate) return;
 
-                <!-- 3. Machame Route -->
-                <div class="route-card">
-                    <div class="route-card-header">
-                        <h3>3. Machame Route</h3>
-                    </div>
-                    <div class="route-card-body">
-                        <p>Inajulikana kama "Whiskey Route". Ni maarufu sana, yenye changamoto za kiasi na urembo wa kipekee.</p>
-                        <a href="Machame route 7 days.pdf" target="_blank" class="btn-pdf">📄 Pakua PDF (Machame Route)</a>
-                    </div>
-                </div>
+    pdfTemplate.style.display = 'block';
+    pdfTemplate.style.position = 'fixed';
+    pdfTemplate.style.left = '-9999px';
+    pdfTemplate.style.top = '0';
+    pdfTemplate.style.width = '800px';
 
-                <!-- 4. Rongai Route -->
-                <div class="route-card">
-                    <div class="route-card-header">
-                        <h3>4. Rongai Route</h3>
-                    </div>
-                    <div class="route-card-body">
-                        <p>Njia pekee inayoanzia upande wa Kaskazini mwa mlima karibu na mpaka wa Kenya. Ni tulivu na haina watu wengi.</p>
-                        <a href="Rongai 6 days.pdf" target="_blank" class="btn-pdf">📄 Pakua PDF (Rongai Route)</a>
-                    </div>
-                </div>
+    const opt = {
+        margin:       10,
+        filename:     `MOI_Adventure_Booking_${name.replace(/\s+/g, '_')}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, logging: false },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
 
-                <!-- 5. Umbwe Route -->
-                <div class="route-card">
-                    <div class="route-card-header">
-                        <h3>5. Umbwe Route</h3>
-                    </div>
-                    <div class="route-card-body">
-                        <p>Njia fupi zaidi lakini yenye mwinuko mkali na changamoto kubwa zaidi. Inawafaa wapandaji yenye uzoefu wa juu.</p>
-                        <a href="Umbwe route.pdf" target="_blank" class="btn-pdf">📄 Pakua PDF (Umbwe Route)</a>
-                    </div>
-                </div>
+    setTimeout(() => {
+        html2pdf().set(opt).from(pdfTemplate).save().then(() => {
+            pdfTemplate.style.display = 'none';
+            pdfTemplate.style.position = 'static';
+        }).catch((error) => {
+            console.error("Error kwenye PDF:", error);
+            pdfTemplate.style.display = 'none';
+            pdfTemplate.style.position = 'static';
+        });
+    }, 100);
+}
 
-            </div>
-        </section>
 
-        <!-- BOOKING FORM SECTION -->
-        <section id="booking" class="booking-section">
-            <h2 class="section-title">Form Ya Kuweka Booking</h2>
-            
-            <form id="bookingForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="fullName">Jina Kamili la Mgeni:</label>
-                        <input type="text" id="fullName" required placeholder="Mfano: John Doe">
-                    </div>
+// ==========================================
+// 4. TUMA WHATSAPP + SAVE SUPABASE
+// ==========================================
+async function sendToWhatsApp(event) {
+    if (event) event.preventDefault();
 
-                    <div class="form-group">
-                        <label for="phone">Namba ya Simu:</label>
-                        <input type="tel" id="phone" required placeholder="Mfano: +255 700 000 000">
-                    </div>
-                </div>
+    const name = document.getElementById('fullName')?.value.trim();
+    const phone = document.getElementById('phone')?.value.trim();
+    const email = document.getElementById('email')?.value.trim();
+    const country = document.getElementById('country')?.value.trim();
+    const route = document.getElementById('selectedRoute')?.value;
+    const date = document.getElementById('startDate')?.value;
+    const notes = document.getElementById('notes')?.value.trim();
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="email">Barua Pepe (Email):</label>
-                        <input type="email" id="email" required placeholder="mfano@gmail.com">
-                    </div>
+    if (!name || !phone || !route || !date) {
+        alert("Tafadhali jaza taarifa zote muhimu kabla ya kutuma WhatsApp.");
+        return;
+    }
 
-                    <div class="form-group">
-                        <label for="country">Nchi Unakotoka:</label>
-                        <input type="text" id="country" required placeholder="Mfano: Tanzania / Germany">
-                    </div>
-                </div>
+    // Hifadhi kwanza kwenye Supabase
+    await saveBookingToSupabase({ name, phone, email, country, route, date, notes });
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="selectedRoute">Chagua Njia (Route):</label>
-                        <select id="selectedRoute" required>
-                            <option value="">-- Chagua Route --</option>
-                            <option value="Marangu Route">Marangu Route</option>
-                            <option value="Lemosho Route">Lemosho Route</option>
-                            <option value="Machame Route">Machame Route</option>
-                            <option value="Rongai Route">Rongai Route</option>
-                            <option value="Umbwe Route">Umbwe Route</option>
-                        </select>
-                    </div>
+    const message = `Habari MOI ADVENTURE, Naomba kufanya Booking:\n\n` +
+                    `👤 *Jina:* ${name}\n` +
+                    `📞 *Simu:* ${phone}\n` +
+                    `✉️ *Email:* ${email || 'Hakuweka'}\n` +
+                    `🌍 *Nchi:* ${country || 'Hakuweka'}\n` +
+                    `🏔️ *Route:* ${route}\n` +
+                    `📅 *Tarehe:* ${date}\n` +
+                    `📝 *Maelezo:* ${notes || 'Hakuna'}`;
 
-                    <div class="form-group">
-                        <label for="startDate">Tarehe Unayotegemea Kuja Kupanda:</label>
-                        <input type="date" id="startDate" required>
-                    </div>
-                </div>
+    const whatsappUrl = `https://wa.me/2557693345456?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+}
 
-                <div class="form-group">
-                    <label for="notes">Maelezo Ziada / Mahitaji Maalum:</label>
-                    <textarea id="notes" rows="3" placeholder="Andika maelezo yoyote ziada hapa..."></textarea>
-                </div>
 
-                <div class="btn-group">
-                    <button type="button" class="btn-submit" onclick="generatePDF()">📥 Pakua PDF Ya Booking</button>
-					<div class="btn-group">
-    <button type="button" class="btn-submit" onclick="generatePDF()">📥 Pakua PDF Ya Booking</button>
-    <a id="whatsappBtn" href="#" class="btn-whatsapp" onclick="sendToWhatsApp(event)">💬 Tuma WhatsApp</a>
-    <a id="emailBtn" href="#" class="btn-email" onclick="sendToEmail(event)">✉️ Tuma Email</a>
-</div>
-                    <a id="whatsappBtn" href="#" class="btn-whatsapp" onclick="sendToWhatsApp(event)">💬 Tuma WhatsApp (+255769345456)</a>
-                </div>
-            </form>
-        </section>
+// ==========================================
+// 5. TUMA EMAIL + SAVE SUPABASE
+// ==========================================
+async function sendToEmail(event) {
+    if (event) event.preventDefault();
 
-    </div>
+    const name = document.getElementById('fullName')?.value.trim();
+    const phone = document.getElementById('phone')?.value.trim();
+    const email = document.getElementById('email')?.value.trim();
+    const country = document.getElementById('country')?.value.trim();
+    const route = document.getElementById('selectedRoute')?.value;
+    const date = document.getElementById('startDate')?.value;
+    const notes = document.getElementById('notes')?.value.trim();
 
-    <!-- HIDDEN TEMPLATE FOR PRINTING PDF (Ina Logo Mbili: Kulia na Kushoto) -->
-    <div id="pdfTemplate" style="display: none;">
-        <div class="pdf-box">
-            <div class="pdf-header">
-                <img src="images/logo-left.png" alt="Left Logo" class="pdf-logo" onerror="this.src='https://via.placeholder.com/80?text=LOGO+1'">
-                <div class="pdf-title">
-                    <h2>MOI ADVENTURE</h2>
-                    <p>Mount Kilimanjaro Climbing Booking Confirmation</p>
-                    <small>Email: info@moiadventure.com | Phone: +255 769 34 5456</small>
-                </div>
-                <img src="images/logo-right.png" alt="Right Logo" class="pdf-logo" onerror="this.src='https://via.placeholder.com/80?text=LOGO+2'">
-            </div>
-            
-            <hr class="pdf-divider">
+    if (!name || !phone || !route || !date) {
+        alert("Tafadhali jaza taarifa zote muhimu kabla ya kutuma Email.");
+        return;
+    }
 
-            <h3 style="text-align: center; margin-bottom: 20px; color: #1b4332;">TAARIFA ZA BOOKING / CLIENT DETAILS</h3>
+    // Hifadhi kwanza kwenye Supabase
+    await saveBookingToSupabase({ name, phone, email, country, route, date, notes });
 
-            <table class="pdf-table">
-                <tr>
-                    <th>Jina Kamili:</th>
-                    <td id="pdfName"></td>
-                </tr>
-                <tr>
-                    <th>Namba ya Simu:</th>
-                    <td id="pdfPhone"></td>
-                </tr>
-                <tr>
-                    <th>Barua Pepe (Email):</th>
-                    <td id="pdfEmail"></td>
-                </tr>
-                <tr>
-                    <th>Nchi Anayotoka:</th>
-                    <td id="pdfCountry"></td>
-                </tr>
-                <tr>
-                    <th>Njia Aliyochagua (Route):</th>
-                    <td id="pdfRoute"></td>
-                </tr>
-                <tr>
-                    <th>Tarehe ya Safari:</th>
-                    <td id="pdfDate"></td>
-                </tr>
-                <tr>
-                    <th>Maelezo Ziada:</th>
-                    <td id="pdfNotes"></td>
-                </tr>
-            </table>
+    const subject = `Booking Mpya: ${name} - ${route}`;
+    const body = `Habari MOI ADVENTURE,\n\nNaomba kufanya Booking:\n\n` +
+                 `Jina Kamili: ${name}\n` +
+                 `Namba ya Simu: ${phone}\n` +
+                 `Barua Pepe (Email): ${email || 'Hakuweka'}\n` +
+                 `Nchi Anayotoka: ${country || 'Hakuweka'}\n` +
+                 `Njia Aliyochagua (Route): ${route}\n` +
+                 `Tarehe ya Safari: ${date}\n` +
+                 `Maelezo Ziada: ${notes || 'Hakuna'}\n\n` +
+                 `Asante!`;
 
-            <div class="pdf-footer">
-                <p>Asante kwa kuchagua <strong>MOI ADVENTURE</strong>. Tutarudi kwako hivi punde kuthibitisha booking yako!</p>
-            </div>
-        </div>
-    </div>
-
-<!-- FOOTER -->
-<footer>
-    <p>&copy; 2026 MOI ADVENTURE. Haki zote zimehifadhiwa.</p>
-    <p>Mawasiliano: 
-        <a href="https://wa.me/255769345456" target="_blank">+255 769 34 5456</a> | 
-        <a href="mailto:moiadventures@hotmail.com">moiadventures@hotmail.com</a>
-    </p>
-</footer>
-
-    <!-- External JavaScript -->
-    <script src="script.js"></script>
-</body>
-</html>
+    const mailtoUrl = `mailto:moiadventures@hotmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
+}
