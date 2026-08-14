@@ -16,65 +16,56 @@
 </head>
 <body>
 
-    <!-- HEADER / NAVIGATION -->
+    <!-- HEADER / NAVIGATION (Yenye Logo Mbili: Kulia na Kushoto) -->
     <header>
-        <h1>MOI ADVENTURE</h1>
-        <nav>
-            <a href="#routes">Njia za Mlima</a>
-            <a href="#booking">Fanya Booking</a>
-            <a href="https://wa.me/2557693345456" target="_blank">WhatsApp</a>
-        </nav>
+        <!-- Logo ya Kushoto -->
+        <div class="header-logo">
+            <img src="images/logo-left.png" alt="MOI Adventure Logo 1" class="site-logo" onerror="this.src='https://via.placeholder.com/60?text=LOGO+1'">
+        </div>
+
+        <!-- Katikati: Jina la Biashara na Menyu -->
+        <div class="header-center">
+            <h1>MOI ADVENTURE</h1>
+            <nav>
+                <a href="#routes">Njia za Mlima</a>
+                <a href="#booking">Fanya Booking</a>
+                <a href="https://wa.me/255769345456" target="_blank">WhatsApp</a>
+            </nav>
+        </div>
+
+        <!-- Logo ya Kulia -->
+        <div class="header-logo">
+            <img src="images/logo-right.png" alt="MOI Adventure Logo 2" class="site-logo" onerror="this.src='https://via.placeholder.com/60?text=LOGO+2'">
+        </div>
     </header>
 
     <!-- HERO CAROUSEL / SLIDER (Inabadilika Kila Baada ya Sekunde 5) -->
     <div class="slider-container">
-        <!-- Unganisha picha zako hapa. Unaweza kuongeza slide nyingi zaidi kwa ku-copy na ku-paste hii div -->
-        <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1650668302197-7f554c698955?auto=format&fit=crop&w=1600&q=80');">
+        
+        <!-- Picha ya 1 -->
+        <div class="slide active" style="background-image: url('images/hero1.jpeg');">
             <div class="slide-overlay">
-                <div class="slider-container">
-    <!-- Picha ya 1 -->
-    <div class="slide active" style="background-image: url('images/hero1.jpeg');">
-        <div class="slide-overlay">
-            <h2>MOI ADVENTURE</h2>
-            <p>Your Trusted Guide to the Roof of Africa - Mount Kilimanjaro</p>
-        </div>
-    </div>
-
-    <!-- Picha ya 2 -->
-    <div class="slide" style="background-image: url('images/hero2.jpeg');">
-        <div class="slide-overlay">
-            <h2>Uhuru Peak Challenge</h2>
-            <p>Panda Mlima Kilimanjaro kwa usalama na uzoefu wa hali ya juu.</p>
-        </div>
-    </div>
-
-    <!-- Picha ya 3 -->
-    <div class="slide" style="background-image: url('images/hero3.jpeg');">
-        <div class="slide-overlay">
-            <h2>Uzoefu Usiosahaulika</h2>
-            <p>Chagua njia bora na ujiandae kwa safari ya maisha yako.</p>
-        </div>
-    </div>
-</div>
                 <h2>MOI ADVENTURE</h2>
                 <p>Your Trusted Guide to the Roof of Africa - Mount Kilimanjaro</p>
             </div>
         </div>
 
-        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1589553460732-58ef7a11d986?auto=format&fit=crop&w=1600&q=80');">
+        <!-- Picha ya 2 -->
+        <div class="slide" style="background-image: url('images/hero2.jpeg');">
             <div class="slide-overlay">
                 <h2>Uhuru Peak Challenge</h2>
                 <p>Panda Mlima Kilimanjaro kwa usalama na uzoefu wa hali ya juu.</p>
             </div>
         </div>
 
-        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1600&q=80');">
+        <!-- Picha ya 3 -->
+        <div class="slide" style="background-image: url('images/hero3.jpeg');">
             <div class="slide-overlay">
                 <h2>Uzoefu Usiosahaulika</h2>
                 <p>Chagua njia bora na ujiandae kwa safari ya maisha yako.</p>
             </div>
         </div>
-        <!-- ONGEZA SLIDES ZINGINE HAPA -->
+
     </div>
 
     <!-- MAIN CONTAINER -->
@@ -135,7 +126,7 @@
                         <h3>5. Umbwe Route</h3>
                     </div>
                     <div class="route-card-body">
-                        <p>Njia fupi zaidi lakini yenye mwinuko mkali na changamoto kubwa zaidi. Inawafaa wapandaji wenye uzoefu wa juu.</p>
+                        <p>Njia fupi zaidi lakini yenye mwinuko mkali na changamoto kubwa zaidi. Inawafaa wapandaji yenye uzoefu wa juu.</p>
                         <a href="Umbwe route.pdf" target="_blank" class="btn-pdf">📄 Pakua PDF (Umbwe Route)</a>
                     </div>
                 </div>
@@ -198,7 +189,12 @@
 
                 <div class="btn-group">
                     <button type="button" class="btn-submit" onclick="generatePDF()">📥 Pakua PDF Ya Booking</button>
-                    <a id="whatsappBtn" href="#" class="btn-whatsapp" onclick="sendToWhatsApp(event)">💬 Tuma WhatsApp (+2557693345456)</a>
+					<div class="btn-group">
+    <button type="button" class="btn-submit" onclick="generatePDF()">📥 Pakua PDF Ya Booking</button>
+    <a id="whatsappBtn" href="#" class="btn-whatsapp" onclick="sendToWhatsApp(event)">💬 Tuma WhatsApp</a>
+    <a id="emailBtn" href="#" class="btn-email" onclick="sendToEmail(event)">✉️ Tuma Email</a>
+</div>
+                    <a id="whatsappBtn" href="#" class="btn-whatsapp" onclick="sendToWhatsApp(event)">💬 Tuma WhatsApp (+255769345456)</a>
                 </div>
             </form>
         </section>
@@ -209,14 +205,13 @@
     <div id="pdfTemplate" style="display: none;">
         <div class="pdf-box">
             <div class="pdf-header">
-                <!-- Badilisha 'logo-left.png' na 'logo-right.png' na picha zako za Logo -->
-                <img src="logo-left.png" alt="Left Logo" class="pdf-logo" onerror="this.src='https://via.placeholder.com/80?text=LOGO+1'">
+                <img src="images/logo-left.png" alt="Left Logo" class="pdf-logo" onerror="this.src='https://via.placeholder.com/80?text=LOGO+1'">
                 <div class="pdf-title">
                     <h2>MOI ADVENTURE</h2>
                     <p>Mount Kilimanjaro Climbing Booking Confirmation</p>
-                    <small>Email: info@moiadventure.com | Phone: +255 769 334 5456</small>
+                    <small>Email: info@moiadventure.com | Phone: +255 769 34 5456</small>
                 </div>
-                <img src="logo-right.png" alt="Right Logo" class="pdf-logo" onerror="this.src='https://via.placeholder.com/80?text=LOGO+2'">
+                <img src="images/logo-right.png" alt="Right Logo" class="pdf-logo" onerror="this.src='https://via.placeholder.com/80?text=LOGO+2'">
             </div>
             
             <hr class="pdf-divider">
@@ -260,11 +255,14 @@
         </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer>
-        <p>&copy; 2026 MOI ADVENTURE. Haki zote zimehifadhiwa.</p>
-        <p>Mawasiliano: <a href="https://wa.me/2557693345456" target="_blank">+255 769 334 5456</a></p>
-    </footer>
+<!-- FOOTER -->
+<footer>
+    <p>&copy; 2026 MOI ADVENTURE. Haki zote zimehifadhiwa.</p>
+    <p>Mawasiliano: 
+        <a href="https://wa.me/255769345456" target="_blank">+255 769 34 5456</a> | 
+        <a href="mailto:moiadventures@hotmail.com">moiadventures@hotmail.com</a>
+    </p>
+</footer>
 
     <!-- External JavaScript -->
     <script src="script.js"></script>
