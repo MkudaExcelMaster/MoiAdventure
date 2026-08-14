@@ -19,32 +19,50 @@ body {
     line-height: 1.6;
 }
 
-/* HEADER & NAVIGATION */
+/* HEADER & NAVIGATION (YENYE LOGO MBILI) */
 header {
     background-color: var(--primary-color);
     color: white;
-    padding: 1rem 5%;
+    padding: 12px 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-header h1 {
+.header-logo {
+    display: flex;
+    align-items: center;
+}
+
+.site-logo {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.header-center {
+    text-align: center;
+}
+
+.header-center h1 {
     font-size: 1.8rem;
     color: var(--accent-color);
     letter-spacing: 1px;
+    margin-bottom: 4px;
 }
 
 nav a {
     color: white;
     text-decoration: none;
-    margin-left: 20px;
+    margin: 0 10px;
     font-weight: 500;
-    transition: color 0.3s;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
 }
 
 nav a:hover {
@@ -55,7 +73,7 @@ nav a:hover {
 .slider-container {
     position: relative;
     width: 100%;
-    height: 70vh;
+    height: 75vh;
     overflow: hidden;
     background: #000;
 }
@@ -84,7 +102,7 @@ nav a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -96,28 +114,30 @@ nav a:hover {
 
 .slide-overlay h2 {
     font-size: 3rem;
+    font-weight: 700;
     margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
 }
 
 .slide-overlay p {
-    font-size: 1.2rem;
-    max-width: 600px;
+    font-size: 1.25rem;
+    max-width: 650px;
     color: #e0e0e0;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
 }
 
-/* MAIN CONTENT */
+/* MAIN CONTENT CONTAINER */
 .container {
     width: 90%;
     max-width: 1200px;
-    margin: 40px auto;
+    margin: 50px auto;
 }
 
 .section-title {
     text-align: center;
     font-size: 2.2rem;
     color: var(--primary-color);
-    margin-bottom: 30px;
+    margin-bottom: 35px;
     position: relative;
 }
 
@@ -127,13 +147,14 @@ nav a:hover {
     height: 4px;
     background: var(--accent-color);
     display: block;
-    margin: 8px auto 0;
+    margin: 10px auto 0;
     border-radius: 2px;
 }
 
+/* ROUTES GRID & CARDS */
 .routes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 25px;
 }
 
@@ -142,21 +163,25 @@ nav a:hover {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
 }
 
 .route-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
 .route-card-header {
     background-color: var(--secondary-color);
     color: white;
-    padding: 15px;
+    padding: 18px 15px;
     text-align: center;
+}
+
+.route-card-header h3 {
+    font-size: 1.25rem;
 }
 
 .route-card-body {
@@ -167,17 +192,22 @@ nav a:hover {
     justify-content: space-between;
 }
 
+.route-card-body p {
+    color: #555;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+}
+
 .btn-pdf {
-    display: inline-block;
+    display: block;
     background-color: var(--accent-color);
     color: #000;
-    padding: 10px 15px;
+    padding: 12px 15px;
     border-radius: 6px;
     text-decoration: none;
     font-weight: 600;
     text-align: center;
-    margin-top: 15px;
-    transition: background 0.3s;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .btn-pdf:hover {
@@ -191,7 +221,13 @@ nav a:hover {
     padding: 40px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    margin-top: 50px;
+    margin-top: 60px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
 }
 
 .form-group {
@@ -209,16 +245,19 @@ nav a:hover {
 .form-group select, 
 .form-group textarea {
     width: 100%;
-    padding: 12px;
+    padding: 12px 15px;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
 }
 
-.form-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 5px rgba(45, 106, 79, 0.3);
 }
 
 .btn-group {
@@ -230,15 +269,16 @@ nav a:hover {
 
 .btn-submit {
     flex: 1;
+    min-width: 200px;
     background-color: var(--primary-color);
     color: white;
     padding: 14px;
     border: none;
     border-radius: 6px;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background-color 0.3s ease;
 }
 
 .btn-submit:hover {
@@ -247,29 +287,30 @@ nav a:hover {
 
 .btn-whatsapp {
     flex: 1;
+    min-width: 200px;
     background-color: #25D366;
     color: white;
     padding: 14px;
     border: none;
     border-radius: 6px;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 600;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    transition: background 0.3s;
+    transition: background-color 0.3s ease;
 }
 
 .btn-whatsapp:hover {
     background-color: #1eb854;
 }
 
-/* PDF TEMPLATE STYLES (LOGOS KULIA NA KUSHOTO) */
+/* PDF TEMPLATE STYLES */
 .pdf-box {
     padding: 30px;
     background: #fff;
-    border: 2px solid #1b4332;
+    border: 2px solid var(--primary-color);
     border-radius: 8px;
 }
 
@@ -291,14 +332,14 @@ nav a:hover {
 }
 
 .pdf-title h2 {
-    color: #1b4332;
+    color: var(--primary-color);
     margin-bottom: 5px;
 }
 
 .pdf-divider {
     border: 0;
     height: 2px;
-    background: #d4af37;
+    background: var(--accent-color);
     margin-bottom: 20px;
 }
 
@@ -317,7 +358,7 @@ nav a:hover {
 .pdf-table th {
     background-color: #f2f2f2;
     width: 35%;
-    color: #1b4332;
+    color: var(--primary-color);
 }
 
 .pdf-footer {
@@ -333,11 +374,72 @@ footer {
     background-color: var(--primary-color);
     color: white;
     text-align: center;
-    padding: 20px;
+    padding: 25px 15px;
     margin-top: 60px;
 }
 
 footer a {
     color: var(--accent-color);
     text-decoration: none;
+    font-weight: 600;
+}
+
+/* RESPONSIVE DESIGN (SIMU NA TABLET) */
+@media (max-width: 768px) {
+    header {
+        padding: 10px 3%;
+    }
+
+    .site-logo {
+        height: 45px;
+    }
+
+    .header-center h1 {
+        font-size: 1.2rem;
+    }
+
+    nav a {
+        margin: 0 5px;
+        font-size: 0.8rem;
+    }
+
+    .slider-container {
+        height: 50vh;
+    }
+
+    .slide-overlay h2 {
+        font-size: 1.8rem;
+    }
+
+    .slide-overlay p {
+        font-size: 0.95rem;
+    }
+
+    .booking-section {
+        padding: 20px;
+    }
+
+    .btn-group {
+        flex-direction: column;
+    }
+}
+.btn-email {
+    flex: 1;
+    min-width: 180px;
+    background-color: #0078d4; /* Rangi ya Bluu ya Email */
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.btn-email:hover {
+    background-color: #005a9e;
 }
