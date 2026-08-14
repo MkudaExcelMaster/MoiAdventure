@@ -4,13 +4,14 @@
 const SUPABASE_URL = 'https://kyuokonjmaunmprrvzin.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_e3GzVKCe5mAr6SBaomqKjw_gD9Ql3Eb';
 
-// Create Supabase client
-const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+let supabase = null;
+if (window.supabase) {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
 
-// Function to save booking data to Supabase Database
 async function saveBookingToSupabase(bookingData) {
     if (!supabase) {
-        console.error("Supabase library is not loaded properly.");
+        console.warn("Supabase client is not initialized.");
         return false;
     }
 
@@ -33,20 +34,19 @@ async function saveBookingToSupabase(bookingData) {
             console.error("Supabase Error:", error);
             return false;
         }
-        console.log("Booking successfully saved to Supabase:", data);
+        console.log("Saved to Supabase:", data);
         return true;
     } catch (err) {
-        console.error("System Error:", err);
+        console.error("System Error saving to Supabase:", err);
         return false;
     }
 }
 
-
 // ==========================================
-// 2. AUTOMATIC IMAGE SLIDER (Images from Supabase)
+// 2. AUTOMATIC IMAGE SLIDER
 // ==========================================
 const sliderContainer = document.querySelector('.slider-container');
-const totalImages = 200; // Total number of images
+const totalImages = 200;
 const SUPABASE_STORAGE_URL = 'https://kyuokonjmaunmprrvzin.supabase.co/storage/v1/object/public/moi-adventure/images';
 
 if (sliderContainer) {
@@ -54,10 +54,7 @@ if (sliderContainer) {
     for (let i = 1; i <= totalImages; i++) {
         const slideDiv = document.createElement('div');
         slideDiv.className = i === 1 ? 'slide active' : 'slide';
-        
-        // Loads images directly from Supabase Storage
         slideDiv.style.backgroundImage = `url('${SUPABASE_STORAGE_URL}/hero${i}.jpeg')`;
-        
         slideDiv.innerHTML = `
             <div class="slide-overlay">
                 <h2>MOI ADVENTURE</h2>
@@ -79,13 +76,12 @@ function nextSlide() {
 }
 setInterval(nextSlide, 5000);
 
-
 // ==========================================
 // 3. GENERATE PDF BOOKING CONFIRMATION
 // ==========================================
 function generatePDF() {
     if (typeof html2pdf === 'undefined') {
-        alert("PDF library is not loaded. Please ensure it is included in index.html!");
+        alert("PDF library is not loaded. Please check index.html!");
         return;
     }
 
@@ -132,16 +128,15 @@ function generatePDF() {
             pdfTemplate.style.display = 'none';
             pdfTemplate.style.position = 'static';
         }).catch((error) => {
-            console.error("PDF Generation Error:", error);
+            console.error("PDF Error:", error);
             pdfTemplate.style.display = 'none';
             pdfTemplate.style.position = 'static';
         });
     }, 100);
 }
 
-
 // ==========================================
-// 4. SEND WHATSAPP + SAVE TO SUPABASE
+// 4. SEND TO WHATSAPP
 // ==========================================
 async function sendToWhatsApp(event) {
     if (event) event.preventDefault();
@@ -159,8 +154,8 @@ async function sendToWhatsApp(event) {
         return;
     }
 
-    // Save to Supabase first
-    await saveBookingToSupabase({ name, phone, email, country, route, date, notes });
+    // Try saving to Supabase (without blocking WhatsApp redirect)
+    saveBookingToSupabase({ name, phone, email, country, route, date, notes });
 
     const message = `Hello MOI ADVENTURE, I would like to make a Booking:\n\n` +
                     `👤 *Name:* ${name}\n` +
@@ -175,9 +170,8 @@ async function sendToWhatsApp(event) {
     window.open(whatsappUrl, '_blank');
 }
 
-
 // ==========================================
-// 5. SEND EMAIL + SAVE TO SUPABASE
+// 5. SEND TO EMAIL
 // ==========================================
 async function sendToEmail(event) {
     if (event) event.preventDefault();
@@ -195,8 +189,8 @@ async function sendToEmail(event) {
         return;
     }
 
-    // Save to Supabase first
-    await saveBookingToSupabase({ name, phone, email, country, route, date, notes });
+    // Try saving to Supabase (without blocking Email redirect)
+    saveBookingToSupabase({ name, phone, email, country, route, date, notes });
 
     const subject = `New Booking Request: ${name} - ${route}`;
     const body = `Hello MOI ADVENTURE,\n\nI would like to make a booking:\n\n` +
