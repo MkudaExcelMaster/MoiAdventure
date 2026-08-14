@@ -1,94 +1,270 @@
-// 1. AUTOMATIC IMAGE CAROUSEL (Inabadilika Kila Baada ya Sekunde 5)
-const slides = document.querySelectorAll('.slide');
-let currentSlide = 0;
-
-function nextSlide() {
-    if (slides.length > 0) {
-        slides[currentSlide].classList.remove('active');
-        currentSlide = (currentSlide + 1) % slides.length;
-        slides[currentSlide].classList.add('active');
-    }
-}
-
-// Badilisha slide kila baada ya milisekunde 5000 (sekunde 5)
-setInterval(nextSlide, 5000);
-
-
-// 2. JINSI YA KUGENERATE PDF (Yenye Logo Kulia na Kushoto)
-function generatePDF() {
-    // Chukua data zilizojazwa kwenye form
-    const name = document.getElementById('fullName').value;
-    const phone = document.getElementById('phone').value;
-    const email = document.getElementById('email').value;
-    const country = document.getElementById('country').value;
-    const route = document.getElementById('selectedRoute').value;
-    const date = document.getElementById('startDate').value;
-    const notes = document.getElementById('notes').value;
-
-    // Hakikisha form imejazwa vizuri
-    if (!name || !phone || !route || !date) {
-        alert("Tafadhali jaza taarifa zote muhimu kabla ya kupakua PDF.");
-        return;
-    }
-
-    // Jaza data kwenye template ya PDF iliyoandaliwa
-    document.getElementById('pdfName').innerText = name;
-    document.getElementById('pdfPhone').innerText = phone;
-    document.getElementById('pdfEmail').innerText = email;
-    document.getElementById('pdfCountry').innerText = country;
-    document.getElementById('pdfRoute').innerText = route;
-    document.getElementById('pdfDate').innerText = date;
-    document.getElementById('pdfNotes').innerText = notes || "Hakuna";
-
-    // Onyesha template kwa muda ili kuitengeneza kuwa PDF
-    const pdfTemplate = document.getElementById('pdfTemplate');
-    pdfTemplate.style.display = 'block';
-
-    // Mipangilio ya PDF
-    const opt = {
-        margin:       10,
-        filename:     `MOI_Adventure_Booking_${name.replace(/\s+/g, '_')}.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    // Tengeneza PDF
-    html2pdf().set(opt).from(pdfTemplate).save().then(() => {
-        // Ficha tena template baada ya kumaliza kupakua
-        pdfTemplate.style.display = 'none';
-    });
-}
-
-
-// 3. TUMA MOJA KWA MOJA WHATSAPP (Ili Taarifa Zijae Kwenye WhatsApp Yako)
-function sendToWhatsApp(event) {
-    event.preventDefault();
-
-    const name = document.getElementById('fullName').value;
-    const phone = document.getElementById('phone').value;
-    const email = document.getElementById('email').value;
-    const country = document.getElementById('country').value;
-    const route = document.getElementById('selectedRoute').value;
-    const date = document.getElementById('startDate').value;
-    const notes = document.getElementById('notes').value;
-
-    if (!name || !phone || !route || !date) {
-        alert("Tafadhali jaza taarifa zote muhimu kabla ya kutuma WhatsApp.");
-        return;
-    }
-
-    // Ujumbe unaotumwa WhatsApp kwenda +2557693345456
-    const message = `Habari MOI ADVENTURE, Naomba kufanya Booking:\n\n` +
-                    `👤 *Jina:* ${name}\n` +
-                    `📞 *Simu:* ${phone}\n` +
-                    `✉️ *Email:* ${email}\n` +
-                    `🌍 *Nchi:* ${country}\n` +
-                    `🏔️ *Route:* ${route}\n` +
-                    `📅 *Tarehe:* ${date}\n` +
-                    `📝 *Maelezo:* ${notes || 'Hakuna'}`;
-
-    const whatsappUrl = `https://wa.me/2557693345456?text=${encodeURIComponent(message)}`;
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOI ADVENTURE - Mount Kilimanjaro Climbing</title>
     
-    window.open(whatsappUrl, '_blank');
-}
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- html2pdf Library for generating PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+    <!-- HEADER / NAVIGATION (Yenye Logo Mbili: Kulia na Kushoto) -->
+    <header>
+        <!-- Logo ya Kushoto -->
+        <div class="header-logo">
+            <img src="images/logo-left.png" alt="MOI Adventure Logo 1" class="site-logo" onerror="this.src='https://via.placeholder.com/60?text=LOGO+1'">
+        </div>
+
+        <!-- Katikati: Jina la Biashara na Menyu -->
+        <div class="header-center">
+            <h1>MOI ADVENTURE</h1>
+            <nav>
+                <a href="#routes">Njia za Mlima</a>
+                <a href="#booking">Fanya Booking</a>
+                <a href="https://wa.me/255769345456" target="_blank">WhatsApp</a>
+            </nav>
+        </div>
+
+        <!-- Logo ya Kulia -->
+        <div class="header-logo">
+            <img src="images/logo-right.png" alt="MOI Adventure Logo 2" class="site-logo" onerror="this.src='https://via.placeholder.com/60?text=LOGO+2'">
+        </div>
+    </header>
+
+    <!-- HERO CAROUSEL / SLIDER (Inabadilika Kila Baada ya Sekunde 5) -->
+    <div class="slider-container">
+        
+        <!-- Picha ya 1 -->
+        <div class="slide active" style="background-image: url('images/hero1.jpeg');">
+            <div class="slide-overlay">
+                <h2>MOI ADVENTURE</h2>
+                <p>Your Trusted Guide to the Roof of Africa - Mount Kilimanjaro</p>
+            </div>
+        </div>
+
+        <!-- Picha ya 2 -->
+        <div class="slide" style="background-image: url('images/hero2.jpeg');">
+            <div class="slide-overlay">
+                <h2>Uhuru Peak Challenge</h2>
+                <p>Panda Mlima Kilimanjaro kwa usalama na uzoefu wa hali ya juu.</p>
+            </div>
+        </div>
+
+        <!-- Picha ya 3 -->
+        <div class="slide" style="background-image: url('images/hero3.jpeg');">
+            <div class="slide-overlay">
+                <h2>Uzoefu Usiosahaulika</h2>
+                <p>Chagua njia bora na ujiandae kwa safari ya maisha yako.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+
+        <!-- ROUTES SECTION -->
+        <section id="routes">
+            <h2 class="section-title">Njia Tano (5) Za Kupanda Kilimanjaro</h2>
+            <div class="routes-grid">
+
+                <!-- 1. Marangu Route -->
+                <div class="route-card">
+                    <div class="route-card-header">
+                        <h3>1. Marangu Route</h3>
+                    </div>
+                    <div class="route-card-body">
+                        <p>Njia hii inafahamika pia kama "Coca-Cola Route". Ni njia pekee yenye nyumba za kulala (huts) badala ya hema.</p>
+                        <a href="Marangu 6 days.pdf" target="_blank" class="btn-pdf">📄 Pakua PDF (Marangu Route)</a>
+                    </div>
+                </div>
+
+                <!-- 2. Lemosho Route -->
+                <div class="route-card">
+                    <div class="route-card-header">
+                        <h3>2. Lemosho Route</h3>
+                    </div>
+                    <div class="route-card-body">
+                        <p>Inajulikana kwa kuwa na uwezekano mkubwa wa kufika kileleni na muonekano mzuri sana wa asili.</p>
+                        <a href="Lemosho 8 days.pdf" target="_blank" class="btn-pdf">📄 Pakua PDF (Lemosho Route)</a>
+                    </div>
+                </div>
+
+                <!-- 3. Machame Route -->
+                <div class="route-card">
+                    <div class="route-card-header">
+                        <h3>3. Machame Route</h3>
+                    </div>
+                    <div class="route-card-body">
+                        <p>Inajulikana kama "Whiskey Route". Ni maarufu sana, yenye changamoto za kiasi na urembo wa kipekee.</p>
+                        <a href="Machame route 7 days.pdf" target="_blank" class="btn-pdf">📄 Pakua PDF (Machame Route)</a>
+                    </div>
+                </div>
+
+                <!-- 4. Rongai Route -->
+                <div class="route-card">
+                    <div class="route-card-header">
+                        <h3>4. Rongai Route</h3>
+                    </div>
+                    <div class="route-card-body">
+                        <p>Njia pekee inayoanzia upande wa Kaskazini mwa mlima karibu na mpaka wa Kenya. Ni tulivu na haina watu wengi.</p>
+                        <a href="Rongai 6 days.pdf" target="_blank" class="btn-pdf">📄 Pakua PDF (Rongai Route)</a>
+                    </div>
+                </div>
+
+                <!-- 5. Umbwe Route -->
+                <div class="route-card">
+                    <div class="route-card-header">
+                        <h3>5. Umbwe Route</h3>
+                    </div>
+                    <div class="route-card-body">
+                        <p>Njia fupi zaidi lakini yenye mwinuko mkali na changamoto kubwa zaidi. Inawafaa wapandaji yenye uzoefu wa juu.</p>
+                        <a href="Umbwe route.pdf" target="_blank" class="btn-pdf">📄 Pakua PDF (Umbwe Route)</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- BOOKING FORM SECTION -->
+        <section id="booking" class="booking-section">
+            <h2 class="section-title">Form Ya Kuweka Booking</h2>
+            
+            <form id="bookingForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fullName">Jina Kamili la Mgeni:</label>
+                        <input type="text" id="fullName" required placeholder="Mfano: John Doe">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Namba ya Simu:</label>
+                        <input type="tel" id="phone" required placeholder="Mfano: +255 700 000 000">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Barua Pepe (Email):</label>
+                        <input type="email" id="email" required placeholder="mfano@gmail.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="country">Nchi Unakotoka:</label>
+                        <input type="text" id="country" required placeholder="Mfano: Tanzania / Germany">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="selectedRoute">Chagua Njia (Route):</label>
+                        <select id="selectedRoute" required>
+                            <option value="">-- Chagua Route --</option>
+                            <option value="Marangu Route">Marangu Route</option>
+                            <option value="Lemosho Route">Lemosho Route</option>
+                            <option value="Machame Route">Machame Route</option>
+                            <option value="Rongai Route">Rongai Route</option>
+                            <option value="Umbwe Route">Umbwe Route</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="startDate">Tarehe Unayotegemea Kuja Kupanda:</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Maelezo Ziada / Mahitaji Maalum:</label>
+                    <textarea id="notes" rows="3" placeholder="Andika maelezo yoyote ziada hapa..."></textarea>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn-submit" onclick="generatePDF()">📥 Pakua PDF Ya Booking</button>
+					<div class="btn-group">
+    <button type="button" class="btn-submit" onclick="generatePDF()">📥 Pakua PDF Ya Booking</button>
+    <a id="whatsappBtn" href="#" class="btn-whatsapp" onclick="sendToWhatsApp(event)">💬 Tuma WhatsApp</a>
+    <a id="emailBtn" href="#" class="btn-email" onclick="sendToEmail(event)">✉️ Tuma Email</a>
+</div>
+                    <a id="whatsappBtn" href="#" class="btn-whatsapp" onclick="sendToWhatsApp(event)">💬 Tuma WhatsApp (+255769345456)</a>
+                </div>
+            </form>
+        </section>
+
+    </div>
+
+    <!-- HIDDEN TEMPLATE FOR PRINTING PDF (Ina Logo Mbili: Kulia na Kushoto) -->
+    <div id="pdfTemplate" style="display: none;">
+        <div class="pdf-box">
+            <div class="pdf-header">
+                <img src="images/logo-left.png" alt="Left Logo" class="pdf-logo" onerror="this.src='https://via.placeholder.com/80?text=LOGO+1'">
+                <div class="pdf-title">
+                    <h2>MOI ADVENTURE</h2>
+                    <p>Mount Kilimanjaro Climbing Booking Confirmation</p>
+                    <small>Email: info@moiadventure.com | Phone: +255 769 34 5456</small>
+                </div>
+                <img src="images/logo-right.png" alt="Right Logo" class="pdf-logo" onerror="this.src='https://via.placeholder.com/80?text=LOGO+2'">
+            </div>
+            
+            <hr class="pdf-divider">
+
+            <h3 style="text-align: center; margin-bottom: 20px; color: #1b4332;">TAARIFA ZA BOOKING / CLIENT DETAILS</h3>
+
+            <table class="pdf-table">
+                <tr>
+                    <th>Jina Kamili:</th>
+                    <td id="pdfName"></td>
+                </tr>
+                <tr>
+                    <th>Namba ya Simu:</th>
+                    <td id="pdfPhone"></td>
+                </tr>
+                <tr>
+                    <th>Barua Pepe (Email):</th>
+                    <td id="pdfEmail"></td>
+                </tr>
+                <tr>
+                    <th>Nchi Anayotoka:</th>
+                    <td id="pdfCountry"></td>
+                </tr>
+                <tr>
+                    <th>Njia Aliyochagua (Route):</th>
+                    <td id="pdfRoute"></td>
+                </tr>
+                <tr>
+                    <th>Tarehe ya Safari:</th>
+                    <td id="pdfDate"></td>
+                </tr>
+                <tr>
+                    <th>Maelezo Ziada:</th>
+                    <td id="pdfNotes"></td>
+                </tr>
+            </table>
+
+            <div class="pdf-footer">
+                <p>Asante kwa kuchagua <strong>MOI ADVENTURE</strong>. Tutarudi kwako hivi punde kuthibitisha booking yako!</p>
+            </div>
+        </div>
+    </div>
+
+<!-- FOOTER -->
+<footer>
+    <p>&copy; 2026 MOI ADVENTURE. Haki zote zimehifadhiwa.</p>
+    <p>Mawasiliano: 
+        <a href="https://wa.me/255769345456" target="_blank">+255 769 34 5456</a> | 
+        <a href="mailto:moiadventures@hotmail.com">moiadventures@hotmail.com</a>
+    </p>
+</footer>
+
+    <!-- External JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
