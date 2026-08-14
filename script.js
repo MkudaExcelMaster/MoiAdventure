@@ -4,13 +4,13 @@
 const SUPABASE_URL = 'https://kyuokonjmaunmprrvzin.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_e3GzVKCe5mAr6SBaomqKjw_gD9Ql3Eb';
 
-// Kutengeneza Supabase client
+// Create Supabase client
 const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-// Function ya kuhifadhi data kwenye Supabase Database
+// Function to save booking data to Supabase Database
 async function saveBookingToSupabase(bookingData) {
     if (!supabase) {
-        console.error("Supabase library haijapakia vizuri.");
+        console.error("Supabase library is not loaded properly.");
         return false;
     }
 
@@ -33,7 +33,7 @@ async function saveBookingToSupabase(bookingData) {
             console.error("Supabase Error:", error);
             return false;
         }
-        console.log("Booking imehifadhiwa Supabase kikamilifu:", data);
+        console.log("Booking successfully saved to Supabase:", data);
         return true;
     } catch (err) {
         console.error("System Error:", err);
@@ -43,10 +43,10 @@ async function saveBookingToSupabase(bookingData) {
 
 
 // ==========================================
-// 2. AUTOMATIC IMAGE SLIDER (Picha kutoka Supabase)
+// 2. AUTOMATIC IMAGE SLIDER (Images from Supabase)
 // ==========================================
 const sliderContainer = document.querySelector('.slider-container');
-const totalImages = 200; // Idadi ya picha
+const totalImages = 200; // Total number of images
 const SUPABASE_STORAGE_URL = 'https://kyuokonjmaunmprrvzin.supabase.co/storage/v1/object/public/moi-adventure/images';
 
 if (sliderContainer) {
@@ -55,7 +55,7 @@ if (sliderContainer) {
         const slideDiv = document.createElement('div');
         slideDiv.className = i === 1 ? 'slide active' : 'slide';
         
-        // Inasoma picha moja kwa moja kutoka Supabase Storage
+        // Loads images directly from Supabase Storage
         slideDiv.style.backgroundImage = `url('${SUPABASE_STORAGE_URL}/hero${i}.jpeg')`;
         
         slideDiv.innerHTML = `
@@ -85,7 +85,7 @@ setInterval(nextSlide, 5000);
 // ==========================================
 function generatePDF() {
     if (typeof html2pdf === 'undefined') {
-        alert("Library ya PDF haijapakia. Hakikisha umeiweka kwenye index.html!");
+        alert("PDF library is not loaded. Please ensure it is included in index.html!");
         return;
     }
 
@@ -98,17 +98,17 @@ function generatePDF() {
     const notes = document.getElementById('notes')?.value.trim();
 
     if (!name || !phone || !route || !date) {
-        alert("Tafadhali jaza taarifa zote muhimu (Jina, Simu, Route, na Tarehe) kabla ya kupakua PDF.");
+        alert("Please fill in all required fields (Name, Phone, Route, and Date) before downloading the PDF.");
         return;
     }
 
     if (document.getElementById('pdfName')) document.getElementById('pdfName').innerText = name;
     if (document.getElementById('pdfPhone')) document.getElementById('pdfPhone').innerText = phone;
-    if (document.getElementById('pdfEmail')) document.getElementById('pdfEmail').innerText = email || "Hazijawekwa";
-    if (document.getElementById('pdfCountry')) document.getElementById('pdfCountry').innerText = country || "Hazijawekwa";
+    if (document.getElementById('pdfEmail')) document.getElementById('pdfEmail').innerText = email || "Not provided";
+    if (document.getElementById('pdfCountry')) document.getElementById('pdfCountry').innerText = country || "Not provided";
     if (document.getElementById('pdfRoute')) document.getElementById('pdfRoute').innerText = route;
     if (document.getElementById('pdfDate')) document.getElementById('pdfDate').innerText = date;
-    if (document.getElementById('pdfNotes')) document.getElementById('pdfNotes').innerText = notes || "Hakuna";
+    if (document.getElementById('pdfNotes')) document.getElementById('pdfNotes').innerText = notes || "None";
 
     const pdfTemplate = document.getElementById('pdfTemplate');
     if (!pdfTemplate) return;
@@ -132,7 +132,7 @@ function generatePDF() {
             pdfTemplate.style.display = 'none';
             pdfTemplate.style.position = 'static';
         }).catch((error) => {
-            console.error("Error kwenye PDF:", error);
+            console.error("PDF Generation Error:", error);
             pdfTemplate.style.display = 'none';
             pdfTemplate.style.position = 'static';
         });
@@ -141,7 +141,7 @@ function generatePDF() {
 
 
 // ==========================================
-// 4. TUMA WHATSAPP + SAVE SUPABASE
+// 4. SEND WHATSAPP + SAVE TO SUPABASE
 // ==========================================
 async function sendToWhatsApp(event) {
     if (event) event.preventDefault();
@@ -155,21 +155,21 @@ async function sendToWhatsApp(event) {
     const notes = document.getElementById('notes')?.value.trim();
 
     if (!name || !phone || !route || !date) {
-        alert("Tafadhali jaza taarifa zote muhimu kabla ya kutuma WhatsApp.");
+        alert("Please fill in all required fields before sending via WhatsApp.");
         return;
     }
 
-    // Hifadhi kwanza kwenye Supabase
+    // Save to Supabase first
     await saveBookingToSupabase({ name, phone, email, country, route, date, notes });
 
-    const message = `Habari MOI ADVENTURE, Naomba kufanya Booking:\n\n` +
-                    `👤 *Jina:* ${name}\n` +
-                    `📞 *Simu:* ${phone}\n` +
-                    `✉️ *Email:* ${email || 'Hakuweka'}\n` +
-                    `🌍 *Nchi:* ${country || 'Hakuweka'}\n` +
+    const message = `Hello MOI ADVENTURE, I would like to make a Booking:\n\n` +
+                    `👤 *Name:* ${name}\n` +
+                    `📞 *Phone:* ${phone}\n` +
+                    `✉️ *Email:* ${email || 'Not provided'}\n` +
+                    `🌍 *Country:* ${country || 'Not provided'}\n` +
                     `🏔️ *Route:* ${route}\n` +
-                    `📅 *Tarehe:* ${date}\n` +
-                    `📝 *Maelezo:* ${notes || 'Hakuna'}`;
+                    `📅 *Date:* ${date}\n` +
+                    `📝 *Notes:* ${notes || 'None'}`;
 
     const whatsappUrl = `https://wa.me/255769345456?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -177,7 +177,7 @@ async function sendToWhatsApp(event) {
 
 
 // ==========================================
-// 5. TUMA EMAIL + SAVE SUPABASE
+// 5. SEND EMAIL + SAVE TO SUPABASE
 // ==========================================
 async function sendToEmail(event) {
     if (event) event.preventDefault();
@@ -191,23 +191,23 @@ async function sendToEmail(event) {
     const notes = document.getElementById('notes')?.value.trim();
 
     if (!name || !phone || !route || !date) {
-        alert("Tafadhali jaza taarifa zote muhimu kabla ya kutuma Email.");
+        alert("Please fill in all required fields before sending an Email.");
         return;
     }
 
-    // Hifadhi kwanza kwenye Supabase
+    // Save to Supabase first
     await saveBookingToSupabase({ name, phone, email, country, route, date, notes });
 
-    const subject = `Booking Mpya: ${name} - ${route}`;
-    const body = `Habari MOI ADVENTURE,\n\nNaomba kufanya Booking:\n\n` +
-                 `Jina Kamili: ${name}\n` +
-                 `Namba ya Simu: ${phone}\n` +
-                 `Barua Pepe (Email): ${email || 'Hakuweka'}\n` +
-                 `Nchi Anayotoka: ${country || 'Hakuweka'}\n` +
-                 `Njia Aliyochagua (Route): ${route}\n` +
-                 `Tarehe ya Safari: ${date}\n` +
-                 `Maelezo Ziada: ${notes || 'Hakuna'}\n\n` +
-                 `Asante!`;
+    const subject = `New Booking Request: ${name} - ${route}`;
+    const body = `Hello MOI ADVENTURE,\n\nI would like to make a booking:\n\n` +
+                 `Full Name: ${name}\n` +
+                 `Phone Number: ${phone}\n` +
+                 `Email Address: ${email || 'Not provided'}\n` +
+                 `Country: ${country || 'Not provided'}\n` +
+                 `Selected Route: ${route}\n` +
+                 `Trip Date: ${date}\n` +
+                 `Additional Notes: ${notes || 'None'}\n\n` +
+                 `Thank you!`;
 
     const mailtoUrl = `mailto:moiadventures@hotmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.location.href = mailtoUrl;
