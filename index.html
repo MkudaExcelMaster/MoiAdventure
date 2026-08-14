@@ -13,6 +13,9 @@
 
     <!-- html2pdf Library for generating PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- Supabase JS Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -189,12 +192,8 @@
 
                 <div class="btn-group">
                     <button type="button" class="btn-submit" onclick="generatePDF()">📥 Pakua PDF Ya Booking</button>
-					<div class="btn-group">
-    <button type="button" class="btn-submit" onclick="generatePDF()">📥 Pakua PDF Ya Booking</button>
-    <a id="whatsappBtn" href="#" class="btn-whatsapp" onclick="sendToWhatsApp(event)">💬 Tuma WhatsApp</a>
-    <a id="emailBtn" href="#" class="btn-email" onclick="sendToEmail(event)">✉️ Tuma Email</a>
-</div>
-                    <a id="whatsappBtn" href="#" class="btn-whatsapp" onclick="sendToWhatsApp(event)">💬 Tuma WhatsApp (+255769345456)</a>
+                    <a id="whatsappBtn" href="#" class="btn-whatsapp" onclick="sendToWhatsApp(event)">💬 Tuma WhatsApp</a>
+                    <a id="emailBtn" href="#" class="btn-email" onclick="sendToEmail(event)">✉️ Tuma Email</a>
                 </div>
             </form>
         </section>
@@ -209,7 +208,7 @@
                 <div class="pdf-title">
                     <h2>MOI ADVENTURE</h2>
                     <p>Mount Kilimanjaro Climbing Booking Confirmation</p>
-                    <small>Email: info@moiadventure.com | Phone: +255 769 34 5456</small>
+                    <small>Email: moiadventures@hotmail.com | Phone: +255 769 34 5456</small>
                 </div>
                 <img src="images/logo-right.png" alt="Right Logo" class="pdf-logo" onerror="this.src='https://via.placeholder.com/80?text=LOGO+2'">
             </div>
@@ -255,14 +254,14 @@
         </div>
     </div>
 
-<!-- FOOTER -->
-<footer>
-    <p>&copy; 2026 MOI ADVENTURE. Haki zote zimehifadhiwa.</p>
-    <p>Mawasiliano: 
-        <a href="https://wa.me/255769345456" target="_blank">+255 769 34 5456</a> | 
-        <a href="mailto:moiadventures@hotmail.com">moiadventures@hotmail.com</a>
-    </p>
-</footer>
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 MOI ADVENTURE. Haki zote zimehifadhiwa.</p>
+        <p>Mawasiliano: 
+            <a href="https://wa.me/255769345456" target="_blank">+255 769 34 5456</a> | 
+            <a href="mailto:moiadventures@hotmail.com">moiadventures@hotmail.com</a>
+        </p>
+    </footer>
 
     <!-- External JavaScript -->
     <script src="script.js"></script>
